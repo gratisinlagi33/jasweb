@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel | CyberMedia & Fix</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        slate: { 950: '#0F172A', 900: '#1E293B', 800: '#334155' },
+                        emerald: { 500: '#059669', 400: '#34D399' },
+                        blue: { 500: '#2563EB', 400: '#60A5FA' }
+                    },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="font-sans bg-slate-950 text-gray-100 min-h-screen">
+
+
+    <!-- Login Screen -->
+    <div id="loginScreen" class="min-h-screen flex items-center justify-center p-4">
+        <div class="w-full max-w-md">
+            <div class="text-center mb-8">
+                <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-emerald-500 to-blue-500 flex items-center justify-center mb-4">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                </div>
+                <h1 class="text-2xl font-bold">Admin Panel</h1>
+                <p class="text-gray-400 text-sm mt-1">CyberMedia & Fix Control Dashboard</p>
+            </div>
+            <div class="p-8 rounded-3xl border border-slate-800 bg-slate-900/80 backdrop-blur-xl">
+                <div class="space-y-5">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Username</label>
+                        <input id="loginUser" type="text" placeholder="admin" class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Password</label>
+                        <input id="loginPass" type="password" placeholder="••••••••" class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all text-sm" onkeypress="if(event.key==='Enter')attemptLogin()">
+                    </div>
+                    <div id="loginError" class="hidden text-red-400 text-sm text-center py-2"></div>
+                    <button onclick="attemptLogin()" class="w-full py-3.5 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-emerald-500/25 transition-all duration-300">
+                        Masuk
+                    </button>
+                    <p class="text-xs text-gray-500 text-center">Demo: admin / cybermedia2024</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Admin Dashboard -->
+    <div id="adminDashboard" class="hidden">
+        <!-- Top Bar -->
+        <div class="sticky top-0 z-50 bg-slate-950/90 backdrop-blur-xl border-b border-slate-800">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-500 to-blue-500 flex items-center justify-center">
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-lg">Control Dashboard</h1>
+                        <p class="text-xs text-gray-500">CyberMedia & Fix</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <a href="../index.html" target="_blank" class="px-4 py-2 text-sm bg-slate-800 rounded-xl hover:bg-slate-700 transition-colors">Lihat Website</a>
+                    <button onclick="logout()" class="px-4 py-2 text-sm bg-red-500/10 text-red-400 rounded-xl hover:bg-red-500/20 transition-colors">Logout</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <!-- Analytics Overview -->
+            <div class="mb-10">
+                <h2 class="text-xl font-bold mb-6">Analytics Overview</h2>
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="p-6 rounded-2xl border border-slate-800 bg-slate-900/50">
+                        <div class="text-2xl font-black text-emerald-400" id="stat-hero">0</div>
+                        <div class="text-sm text-gray-400 mt-1">Hero CTA Clicks</div>
+                    </div>
+                    <div class="p-6 rounded-2xl border border-slate-800 bg-slate-900/50">
+                        <div class="text-2xl font-black text-blue-400" id="stat-waAds">0</div>
+                        <div class="text-sm text-gray-400 mt-1">WA Ads Clicks</div>
+                    </div>
+                    <div class="p-6 rounded-2xl border border-slate-800 bg-slate-900/50">
+                        <div class="text-2xl font-black text-emerald-400" id="stat-waRecovery">0</div>
+                        <div class="text-sm text-gray-400 mt-1">WA Recovery Clicks</div>
+                    </div>
+                    <div class="p-6 rounded-2xl border border-slate-800 bg-slate-900/50">
+                        <div class="text-2xl font-black text-blue-400" id="stat-pricing">0</div>
+                        <div class="text-sm text-gray-400 mt-1">Pricing CTA Clicks</div>
+                    </div>
+                </div>
+                <p class="text-xs text-gray-500 mt-3" id="stat-lastUpdated"></p>
+            </div>
+
+
+            <!-- Service Availability Toggle -->
+            <div class="mb-10">
+                <h2 class="text-xl font-bold mb-6">Service Availability</h2>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="p-6 rounded-2xl border border-slate-800 bg-slate-900/50 flex items-center justify-between">
+                        <div>
+                            <h3 class="font-semibold">Periklanan Digital</h3>
+                            <p class="text-sm text-gray-400">Toggle ketersediaan layanan periklanan</p>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="toggle-ads" class="sr-only peer" onchange="toggleService('ads')">
+                            <div class="w-14 h-7 bg-slate-700 peer-focus:ring-2 peer-focus:ring-emerald-500 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-emerald-500"></div>
+                        </label>
+                    </div>
+                    <div class="p-6 rounded-2xl border border-slate-800 bg-slate-900/50 flex items-center justify-between">
+                        <div>
+                            <h3 class="font-semibold">Pemulihan Akun</h3>
+                            <p class="text-sm text-gray-400">Toggle ketersediaan layanan pemulihan</p>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="toggle-recovery" class="sr-only peer" onchange="toggleService('recovery')">
+                            <div class="w-14 h-7 bg-slate-700 peer-focus:ring-2 peer-focus:ring-blue-500 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-blue-500"></div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pricing Management -->
+            <div class="mb-10">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-xl font-bold">Manage Pricing</h2>
+                    <div class="inline-flex p-1 bg-slate-800 rounded-xl">
+                        <button onclick="switchAdminTab('ads')" id="admin-tab-ads" class="px-4 py-2 rounded-lg text-xs font-semibold bg-slate-700 text-emerald-400">Periklanan</button>
+                        <button onclick="switchAdminTab('recovery')" id="admin-tab-recovery" class="px-4 py-2 rounded-lg text-xs font-semibold text-gray-400">Pemulihan</button>
+                    </div>
+                </div>
+                <div id="admin-pricing-ads"></div>
+                <div id="admin-pricing-recovery" class="hidden"></div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+    // ============================================
+    // SHARED STATE (same as frontend)
+    // ============================================
+    const DEFAULT_STATE = {
+        pricing: {
+            ads: [
+                { name: "Starter", price: "Rp 3.500.000", period: "/bulan", popular: false, features: ["1 Platform Iklan", "Budget hingga Rp 5jt/bulan", "Setup Pixel & Tracking", "Laporan Mingguan", "1x Revisi Kreatif/Minggu"], whatsappMsg: "Halo, saya tertarik paket Starter Periklanan Digital." },
+                { name: "Business", price: "Rp 7.500.000", period: "/bulan", popular: true, features: ["2 Platform Iklan", "Budget hingga Rp 20jt/bulan", "Setup Pixel & Conversion API", "A/B Testing Otomatis", "Copywriting & Kreatif Iklan", "Laporan Mingguan + Dashboard", "Konsultasi Strategi Bulanan"], whatsappMsg: "Halo, saya tertarik paket Business Periklanan Digital." },
+                { name: "Enterprise", price: "Rp 15.000.000", period: "/bulan", popular: false, features: ["3 Platform Iklan (Meta, Google, TikTok)", "Budget Unlimited", "Full-funnel Strategy", "Dedicated Account Manager", "Daily Optimization", "Custom Dashboard & Reporting", "Priority Support 24/7", "Landing Page Consultation"], whatsappMsg: "Halo, saya tertarik paket Enterprise Periklanan Digital." }
+            ],
+            recovery: [
+                { name: "Starter", price: "Rp 1.500.000", period: "/kasus", popular: false, features: ["1 Akun Pemulihan", "Estimasi 5-7 Hari Kerja", "Update Progres via WhatsApp", "Panduan Keamanan Dasar"], whatsappMsg: "Halo, saya butuh bantuan pemulihan akun (Paket Starter)." },
+                { name: "Business", price: "Rp 3.500.000", period: "/kasus", popular: true, features: ["1-3 Akun Pemulihan", "Prioritas (3-5 Hari Kerja)", "Banding Ad Account Disabled", "Fix Shadowban", "Audit Keamanan Lengkap", "Setup 2FA & Recovery Plan", "Garansi 30 Hari"], whatsappMsg: "Halo, saya butuh bantuan pemulihan akun (Paket Business)." },
+                { name: "Enterprise", price: "Rp 8.000.000", period: "/kasus", popular: false, features: ["Unlimited Akun (1 Entitas)", "Express (24-48 Jam)", "Full Recovery Suite", "Dedicated Security Specialist", "Monitoring 30 Hari Pasca-Recovery", "Incident Response Plan", "NDA & Kerahasiaan Penuh", "Priority Lifetime Support"], whatsappMsg: "Halo, saya butuh bantuan pemulihan akun (Paket Enterprise)." }
+            ]
+        },
+        services: { ads: { available: true }, recovery: { available: true } },
+        analytics: { ctaClicks: { hero: 0, waAds: 0, waRecovery: 0, pricing: 0 }, lastUpdated: new Date().toISOString() }
+    };
+
+    function getState() {
+        const stored = localStorage.getItem('cybermedia_state');
+        if (stored) { try { return JSON.parse(stored); } catch(e) { return DEFAULT_STATE; } }
+        return DEFAULT_STATE;
+    }
+
+    function setState(newState) {
+        localStorage.setItem('cybermedia_state', JSON.stringify(newState));
+    }
+
+    if (!localStorage.getItem('cybermedia_state')) { setState(DEFAULT_STATE); }
+
+
+    // ============================================
+    // AUTHENTICATION
+    // ============================================
+    const MOCK_CREDENTIALS = { username: 'admin', password: 'cybermedia2024' };
+
+    function attemptLogin() {
+        const user = document.getElementById('loginUser').value;
+        const pass = document.getElementById('loginPass').value;
+        const errorEl = document.getElementById('loginError');
+
+        if (user === MOCK_CREDENTIALS.username && pass === MOCK_CREDENTIALS.password) {
+            localStorage.setItem('cybermedia_auth', 'true');
+            showDashboard();
+        } else {
+            errorEl.textContent = 'Username atau password salah.';
+            errorEl.classList.remove('hidden');
+        }
+    }
+
+    function logout() {
+        localStorage.removeItem('cybermedia_auth');
+        document.getElementById('adminDashboard').classList.add('hidden');
+        document.getElementById('loginScreen').classList.remove('hidden');
+    }
+
+    function showDashboard() {
+        document.getElementById('loginScreen').classList.add('hidden');
+        document.getElementById('adminDashboard').classList.remove('hidden');
+        loadDashboardData();
+    }
+
+    // Check if already logged in
+    if (localStorage.getItem('cybermedia_auth') === 'true') {
+        showDashboard();
+    }
+
+    // ============================================
+    // DASHBOARD DATA LOADING
+    // ============================================
+    function loadDashboardData() {
+        const state = getState();
+
+        // Analytics
+        document.getElementById('stat-hero').textContent = state.analytics.ctaClicks.hero;
+        document.getElementById('stat-waAds').textContent = state.analytics.ctaClicks.waAds;
+        document.getElementById('stat-waRecovery').textContent = state.analytics.ctaClicks.waRecovery;
+        document.getElementById('stat-pricing').textContent = state.analytics.ctaClicks.pricing;
+        document.getElementById('stat-lastUpdated').textContent = 'Last updated: ' + new Date(state.analytics.lastUpdated).toLocaleString('id-ID');
+
+        // Service toggles
+        document.getElementById('toggle-ads').checked = state.services.ads.available;
+        document.getElementById('toggle-recovery').checked = state.services.recovery.available;
+
+        // Render pricing editors
+        renderPricingEditors();
+    }
+
+    // ============================================
+    // SERVICE TOGGLE
+    // ============================================
+    function toggleService(service) {
+        const state = getState();
+        state.services[service].available = document.getElementById(`toggle-${service}`).checked;
+        setState(state);
+    }
+
+
+    // ============================================
+    // PRICING EDITOR
+    // ============================================
+    function renderPricingEditors() {
+        const state = getState();
+        document.getElementById('admin-pricing-ads').innerHTML = state.pricing.ads.map((pkg, i) => createPricingEditor(pkg, 'ads', i)).join('');
+        document.getElementById('admin-pricing-recovery').innerHTML = state.pricing.recovery.map((pkg, i) => createPricingEditor(pkg, 'recovery', i)).join('');
+    }
+
+    function createPricingEditor(pkg, type, index) {
+        const accent = type === 'ads' ? 'emerald' : 'blue';
+        return `
+        <div class="p-6 rounded-2xl border border-slate-800 bg-slate-900/50 mb-4">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="font-bold text-${accent}-400">${pkg.name}</h3>
+                <label class="flex items-center gap-2 text-xs">
+                    <input type="checkbox" ${pkg.popular ? 'checked' : ''} onchange="togglePopular('${type}', ${index}, this.checked)" class="w-4 h-4 rounded bg-slate-700 border-slate-600 text-${accent}-500 focus:ring-${accent}-500">
+                    <span class="text-gray-400">Populer</span>
+                </label>
+            </div>
+            <div class="grid md:grid-cols-3 gap-4 mb-4">
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1">Nama Paket</label>
+                    <input type="text" value="${pkg.name}" onchange="updatePricing('${type}', ${index}, 'name', this.value)" class="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm focus:ring-2 focus:ring-${accent}-500 focus:border-transparent outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1">Harga</label>
+                    <input type="text" value="${pkg.price}" onchange="updatePricing('${type}', ${index}, 'price', this.value)" class="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm focus:ring-2 focus:ring-${accent}-500 focus:border-transparent outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1">Periode</label>
+                    <input type="text" value="${pkg.period}" onchange="updatePricing('${type}', ${index}, 'period', this.value)" class="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm focus:ring-2 focus:ring-${accent}-500 focus:border-transparent outline-none">
+                </div>
+            </div>
+            <div>
+                <label class="block text-xs text-gray-400 mb-1">Fitur (satu per baris)</label>
+                <textarea onchange="updateFeatures('${type}', ${index}, this.value)" class="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm focus:ring-2 focus:ring-${accent}-500 focus:border-transparent outline-none resize-none h-32">${pkg.features.join('\n')}</textarea>
+            </div>
+        </div>`;
+    }
+
+    function updatePricing(type, index, field, value) {
+        const state = getState();
+        state.pricing[type][index][field] = value;
+        setState(state);
+        showSaveNotification();
+    }
+
+    function updateFeatures(type, index, value) {
+        const state = getState();
+        state.pricing[type][index].features = value.split('\n').filter(f => f.trim() !== '');
+        setState(state);
+        showSaveNotification();
+    }
+
+    function togglePopular(type, index, checked) {
+        const state = getState();
+        // Only one can be popular
+        state.pricing[type].forEach((pkg, i) => { pkg.popular = (i === index && checked); });
+        setState(state);
+        renderPricingEditors();
+        showSaveNotification();
+    }
+
+    function showSaveNotification() {
+        // Quick visual feedback
+        const el = document.createElement('div');
+        el.className = 'fixed bottom-6 right-6 px-6 py-3 bg-emerald-500 text-white rounded-xl shadow-lg shadow-emerald-500/25 text-sm font-semibold z-50 animate-pulse';
+        el.textContent = 'Perubahan tersimpan!';
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 2000);
+    }
+
+    // ============================================
+    // ADMIN TAB SWITCH
+    // ============================================
+    function switchAdminTab(tab) {
+        const adsEl = document.getElementById('admin-pricing-ads');
+        const recoveryEl = document.getElementById('admin-pricing-recovery');
+        const tabAds = document.getElementById('admin-tab-ads');
+        const tabRecovery = document.getElementById('admin-tab-recovery');
+
+        if (tab === 'ads') {
+            adsEl.classList.remove('hidden');
+            recoveryEl.classList.add('hidden');
+            tabAds.className = 'px-4 py-2 rounded-lg text-xs font-semibold bg-slate-700 text-emerald-400';
+            tabRecovery.className = 'px-4 py-2 rounded-lg text-xs font-semibold text-gray-400';
+        } else {
+            adsEl.classList.add('hidden');
+            recoveryEl.classList.remove('hidden');
+            tabRecovery.className = 'px-4 py-2 rounded-lg text-xs font-semibold bg-slate-700 text-blue-400';
+            tabAds.className = 'px-4 py-2 rounded-lg text-xs font-semibold text-gray-400';
+        }
+    }
+    </script>
+</body>
+</html>
