@@ -34,11 +34,44 @@
 #testiPopup { transition: all 0.5s cubic-bezier(0.68,-0.55,0.265,1.55); }
 #testiPopup.show { transform: translateX(0); opacity: 1; }
 #testiPopup.hide { transform: translateX(-100px); opacity: 0; }
+
+/* Preloader */
+#preloader { position:fixed; inset:0; z-index:9999; background:#0F172A; display:flex; align-items:center; justify-content:center; transition: opacity 0.5s, visibility 0.5s; }
+#preloader.hidden { opacity:0; visibility:hidden; }
+#preloader .loader { width:60px; height:60px; border-radius:16px; background:linear-gradient(135deg,#059669,#2563EB); animation: pulse-loader 1s ease-in-out infinite; }
+@keyframes pulse-loader { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.2);opacity:0.7} }
+
+/* Scroll Reveal */
+[data-reveal] { opacity:0; transform:translateY(30px); transition: opacity 0.7s cubic-bezier(0.5,0,0,1), transform 0.7s cubic-bezier(0.5,0,0,1); }
+[data-reveal].revealed { opacity:1; transform:translateY(0); }
+
+/* Floating animation */
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-20px)} }
+.animate-float { animation: float 6s ease-in-out infinite; }
+.animate-float-delayed { animation: float 8s ease-in-out infinite 2s; }
+
+
+/* Typing cursor */
+.typing-cursor::after { content:'|'; animation: blink-cursor 1s step-end infinite; color:#059669; }
+@keyframes blink-cursor { 0%,100%{opacity:1} 50%{opacity:0} }
+
+/* Card tilt */
+.card-tilt { transition: transform 0.3s ease; transform-style: preserve-3d; }
+.card-tilt:hover { transform: perspective(1000px) rotateY(-2deg) rotateX(2deg) scale(1.02); }
+
+/* WhatsApp FAB */
+@keyframes wa-bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+.wa-fab { animation: wa-bounce 2s ease-in-out infinite; }
+
+/* Back to top */
+#backToTop { transition: opacity 0.3s, transform 0.3s; }
+#backToTop.hidden { opacity:0; transform:translateY(20px); pointer-events:none; }
     </style>
 </head>
 <body class="font-sans bg-white dark:bg-slate-950 text-gray-900 dark:text-gray-100 transition-colors duration-300">
 
-
+<!-- Preloader -->
+<div id="preloader"><div class="loader"></div></div>
 
     <!-- Navigation -->
     <nav id="navbar" class="fixed top-0 w-full z-50 transition-all duration-300 bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl border-b border-gray-200/50 dark:border-slate-800/50">
@@ -91,8 +124,8 @@
     <!-- Hero Section -->
     <section class="relative min-h-screen flex items-center pt-20 overflow-hidden">
         <div class="absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-transparent to-blue-500/5"></div>
-        <div class="absolute top-1/4 -left-32 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl"></div>
-        <div class="absolute bottom-1/4 -right-32 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"></div>
+        <div class="absolute top-1/4 -left-32 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl animate-float"></div>
+        <div class="absolute bottom-1/4 -right-32 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-float-delayed"></div>
         <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
             <div class="text-center max-w-4xl mx-auto">
                 <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-sm font-medium mb-8">
@@ -104,7 +137,7 @@
                     <span class="bg-gradient-to-r from-emerald-500 to-blue-500 bg-clip-text text-transparent"> Fix Digital</span>
                     <br>Roadblocks.
                 </h1>
-                <p class="text-lg sm:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+                <p class="typing-cursor text-lg sm:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed">
                     Kami memaksimalkan ROI periklanan digital Anda dan memulihkan aset media sosial yang terganggu. Strategi berbasis data, eksekusi presisi, hasil terukur.
                 </p>
                 <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -126,19 +159,19 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
                 <div class="space-y-2">
-                    <div class="text-3xl lg:text-4xl font-black text-emerald-500">500+</div>
+                    <div class="text-3xl lg:text-4xl font-black text-emerald-500" data-count="500" data-suffix="+">0</div>
                     <div class="text-sm text-gray-600 dark:text-gray-400 font-medium">Akun Terpulihkan</div>
                 </div>
                 <div class="space-y-2">
-                    <div class="text-3xl lg:text-4xl font-black text-blue-500">Rp 10B+</div>
+                    <div class="text-3xl lg:text-4xl font-black text-blue-500" data-count="10" data-prefix="Rp " data-suffix="B+">0</div>
                     <div class="text-sm text-gray-600 dark:text-gray-400 font-medium">Total Ad Spend Managed</div>
                 </div>
                 <div class="space-y-2">
-                    <div class="text-3xl lg:text-4xl font-black text-emerald-500">3.2x</div>
+                    <div class="text-3xl lg:text-4xl font-black text-emerald-500" data-count="3.2" data-suffix="x">0</div>
                     <div class="text-sm text-gray-600 dark:text-gray-400 font-medium">Rata-rata ROAS Klien</div>
                 </div>
                 <div class="space-y-2">
-                    <div class="text-3xl lg:text-4xl font-black text-blue-500">98%</div>
+                    <div class="text-3xl lg:text-4xl font-black text-blue-500" data-count="98" data-suffix="%">0</div>
                     <div class="text-sm text-gray-600 dark:text-gray-400 font-medium">Tingkat Keberhasilan</div>
                 </div>
             </div>
@@ -200,7 +233,7 @@
             </div>
             <div class="grid lg:grid-cols-2 gap-8">
                 <!-- Service A: Digital Advertising -->
-                <div class="group relative p-8 lg:p-10 rounded-3xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 hover:border-emerald-500/50 transition-all duration-500 hover:shadow-2xl hover:shadow-emerald-500/5">
+                <div class="card-tilt group relative p-8 lg:p-10 rounded-3xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 hover:border-emerald-500/50 transition-all duration-500 hover:shadow-2xl hover:shadow-emerald-500/5" data-reveal>
                     <div class="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                     <div class="relative">
                         <div class="w-14 h-14 rounded-2xl bg-emerald-500/10 flex items-center justify-center mb-6">
@@ -221,7 +254,7 @@
 
 
                 <!-- Service B: Recovery & Protection -->
-                <div class="group relative p-8 lg:p-10 rounded-3xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 hover:border-blue-500/50 transition-all duration-500 hover:shadow-2xl hover:shadow-blue-500/5">
+                <div class="card-tilt group relative p-8 lg:p-10 rounded-3xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 hover:border-blue-500/50 transition-all duration-500 hover:shadow-2xl hover:shadow-blue-500/5" data-reveal>
                     <div class="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                     <div class="relative">
                         <div class="w-14 h-14 rounded-2xl bg-blue-500/10 flex items-center justify-center mb-6">
@@ -281,21 +314,21 @@
             </div>
             <div class="grid md:grid-cols-3 gap-8 lg:gap-12">
                 <!-- Step 1 -->
-                <div class="relative text-center p-8">
+                <div class="relative text-center p-8" data-reveal>
                     <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center text-white text-2xl font-black mb-6 shadow-lg shadow-emerald-500/25">1</div>
                     <h3 class="text-xl font-bold mb-3">Analisis & Audit</h3>
                     <p class="text-gray-600 dark:text-gray-400 leading-relaxed">Kami mendalami kondisi akun, performa iklan, atau permasalahan keamanan Anda secara menyeluruh.</p>
                     <div class="hidden md:block absolute top-12 left-[60%] w-[80%] h-0.5 bg-gradient-to-r from-emerald-500/50 to-transparent"></div>
                 </div>
                 <!-- Step 2 -->
-                <div class="relative text-center p-8">
+                <div class="relative text-center p-8" data-reveal>
                     <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white text-2xl font-black mb-6 shadow-lg shadow-blue-500/25">2</div>
                     <h3 class="text-xl font-bold mb-3">Eksekusi Strategi</h3>
                     <p class="text-gray-600 dark:text-gray-400 leading-relaxed">Tim ahli kami mengimplementasikan solusi yang telah dirancang khusus untuk kasus Anda dengan presisi tinggi.</p>
                     <div class="hidden md:block absolute top-12 left-[60%] w-[80%] h-0.5 bg-gradient-to-r from-blue-500/50 to-transparent"></div>
                 </div>
                 <!-- Step 3 -->
-                <div class="text-center p-8">
+                <div class="text-center p-8" data-reveal>
                     <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-emerald-500 to-blue-500 flex items-center justify-center text-white text-2xl font-black mb-6 shadow-lg shadow-emerald-500/25">3</div>
                     <h3 class="text-xl font-bold mb-3">Proteksi & Optimasi</h3>
                     <p class="text-gray-600 dark:text-gray-400 leading-relaxed">Monitoring berkelanjutan, laporan berkala, dan proteksi multi-lapis untuk memastikan pertumbuhan tanpa gangguan.</p>
@@ -314,7 +347,7 @@
                 <p class="text-gray-600 dark:text-gray-400 text-lg">Jawaban atas pertanyaan yang sering diajukan klien kami.</p>
             </div>
             <div class="space-y-4" id="faqContainer">
-                <div class="faq-item border border-gray-200 dark:border-slate-800 rounded-2xl overflow-hidden bg-white dark:bg-slate-900/50">
+                <div class="faq-item border border-gray-200 dark:border-slate-800 rounded-2xl overflow-hidden bg-white dark:bg-slate-900/50" data-reveal>
                     <button onclick="toggleFaq(this)" class="w-full px-6 py-5 flex items-center justify-between text-left font-semibold hover:text-emerald-500 transition-colors">
                         <span>Berapa lama proses pemulihan akun yang di-hack?</span>
                         <svg class="w-5 h-5 flex-shrink-0 transition-transform duration-300 faq-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
@@ -323,7 +356,7 @@
                         Rata-rata proses pemulihan memakan waktu 3-7 hari kerja tergantung kompleksitas kasus. Untuk kasus darurat, kami menyediakan jalur prioritas dengan timeline 24-48 jam. Kami akan memberikan update progres secara real-time melalui WhatsApp.
                     </div>
                 </div>
-                <div class="faq-item border border-gray-200 dark:border-slate-800 rounded-2xl overflow-hidden bg-white dark:bg-slate-900/50">
+                <div class="faq-item border border-gray-200 dark:border-slate-800 rounded-2xl overflow-hidden bg-white dark:bg-slate-900/50" data-reveal>
                     <button onclick="toggleFaq(this)" class="w-full px-6 py-5 flex items-center justify-between text-left font-semibold hover:text-emerald-500 transition-colors">
                         <span>Apakah ada garansi jika iklan tidak menghasilkan konversi?</span>
                         <svg class="w-5 h-5 flex-shrink-0 transition-transform duration-300 faq-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
@@ -332,7 +365,7 @@
                         Kami menerapkan sistem performance-based optimization. Jika dalam 14 hari pertama belum ada traksi, kami akan melakukan re-strategizing tanpa biaya tambahan. Garansi kami adalah komitmen untuk terus mengoptimalkan hingga target tercapai sesuai KPI yang disepakati.
                     </div>
                 </div>
-                <div class="faq-item border border-gray-200 dark:border-slate-800 rounded-2xl overflow-hidden bg-white dark:bg-slate-900/50">
+                <div class="faq-item border border-gray-200 dark:border-slate-800 rounded-2xl overflow-hidden bg-white dark:bg-slate-900/50" data-reveal>
                     <button onclick="toggleFaq(this)" class="w-full px-6 py-5 flex items-center justify-between text-left font-semibold hover:text-emerald-500 transition-colors">
                         <span>Apakah data dan akses akun saya aman?</span>
                         <svg class="w-5 h-5 flex-shrink-0 transition-transform duration-300 faq-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
@@ -342,7 +375,8 @@
                     </div>
                 </div>
 
-                <div class="faq-item border border-gray-200 dark:border-slate-800 rounded-2xl overflow-hidden bg-white dark:bg-slate-900/50">
+
+                <div class="faq-item border border-gray-200 dark:border-slate-800 rounded-2xl overflow-hidden bg-white dark:bg-slate-900/50" data-reveal>
                     <button onclick="toggleFaq(this)" class="w-full px-6 py-5 flex items-center justify-between text-left font-semibold hover:text-emerald-500 transition-colors">
                         <span>Platform iklan apa saja yang ditangani?</span>
                         <svg class="w-5 h-5 flex-shrink-0 transition-transform duration-300 faq-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
@@ -351,7 +385,7 @@
                         Kami mengelola kampanye di Meta Ads (Facebook & Instagram), Google Ads (Search, Display, YouTube), dan TikTok Ads. Setiap platform memiliki tim spesialis dedikasi yang memahami algoritma dan best practices terkini.
                     </div>
                 </div>
-                <div class="faq-item border border-gray-200 dark:border-slate-800 rounded-2xl overflow-hidden bg-white dark:bg-slate-900/50">
+                <div class="faq-item border border-gray-200 dark:border-slate-800 rounded-2xl overflow-hidden bg-white dark:bg-slate-900/50" data-reveal>
                     <button onclick="toggleFaq(this)" class="w-full px-6 py-5 flex items-center justify-between text-left font-semibold hover:text-emerald-500 transition-colors">
                         <span>Bagaimana sistem pembayaran dan pelaporan?</span>
                         <svg class="w-5 h-5 flex-shrink-0 transition-transform duration-300 faq-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
@@ -374,14 +408,14 @@
                 <p class="text-gray-600 dark:text-gray-400 text-lg max-w-2xl mx-auto">Konsultasikan kebutuhan bisnis digital Anda. Respon cepat dalam waktu kurang dari 1 jam di jam kerja.</p>
             </div>
             <div class="grid md:grid-cols-2 gap-8">
-                <a href="https://wa.me/6281234567890?text=Halo%20CyberMedia%20%26%20Fix%2C%20saya%20tertarik%20untuk%20konsultasi%20layanan%20periklanan%20digital." id="ctaWaAds" class="group p-8 rounded-3xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 hover:border-emerald-500/50 hover:shadow-xl transition-all duration-300 text-center">
+                <a href="https://wa.me/6281234567890?text=Halo%20CyberMedia%20%26%20Fix%2C%20saya%20tertarik%20untuk%20konsultasi%20layanan%20periklanan%20digital." id="ctaWaAds" class="group p-8 rounded-3xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 hover:border-emerald-500/50 hover:shadow-xl transition-all duration-300 text-center" data-reveal>
                     <div class="w-14 h-14 mx-auto rounded-2xl bg-emerald-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                         <svg class="w-7 h-7 text-emerald-500" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
                     </div>
                     <h3 class="text-lg font-bold mb-2">Konsultasi Periklanan</h3>
                     <p class="text-sm text-gray-600 dark:text-gray-400">Diskusikan strategi scaling bisnis Anda via WhatsApp</p>
                 </a>
-                <a href="https://wa.me/6281234567890?text=Halo%20CyberMedia%20%26%20Fix%2C%20saya%20butuh%20bantuan%20pemulihan%20akun%20media%20sosial%20saya." id="ctaWaRecovery" class="group p-8 rounded-3xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 hover:border-blue-500/50 hover:shadow-xl transition-all duration-300 text-center">
+                <a href="https://wa.me/6281234567890?text=Halo%20CyberMedia%20%26%20Fix%2C%20saya%20butuh%20bantuan%20pemulihan%20akun%20media%20sosial%20saya." id="ctaWaRecovery" class="group p-8 rounded-3xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 hover:border-blue-500/50 hover:shadow-xl transition-all duration-300 text-center" data-reveal>
                     <div class="w-14 h-14 mx-auto rounded-2xl bg-blue-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                         <svg class="w-7 h-7 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
                     </div>
@@ -418,6 +452,17 @@
     </footer>
 
 
+
+<!-- Floating WhatsApp Button -->
+<a href="https://wa.me/6281234567890" target="_blank" class="wa-fab fixed bottom-6 right-6 z-50 w-14 h-14 bg-green-500 rounded-full flex items-center justify-center shadow-lg shadow-green-500/30 hover:scale-110 transition-transform">
+    <svg class="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<!-- Back to Top Button -->
+<button id="backToTop" class="hidden fixed bottom-24 right-6 z-50 w-11 h-11 bg-slate-800 dark:bg-slate-700 border border-slate-700 dark:border-slate-600 rounded-full flex items-center justify-center shadow-lg hover:bg-emerald-500 hover:border-emerald-500 transition-all group" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    <svg class="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/></svg>
+</button>
+
     <!-- Order Notification Popup -->
     <div id="testiPopup" class="hide fixed bottom-6 left-6 z-50 flex items-center gap-3 px-5 py-3 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-full shadow-2xl max-w-xs">
         <div class="w-9 h-9 rounded-full bg-gradient-to-br from-emerald-500 to-blue-500 flex items-center justify-center flex-shrink-0">
@@ -429,6 +474,7 @@
         </div>
         <span class="text-[10px] text-emerald-500 font-semibold ml-auto">Baru saja</span>
     </div>
+
 
 
     <!-- Main Application Script -->
@@ -502,6 +548,7 @@
     };
 
 
+
     function getState() {
         const stored = localStorage.getItem('cybermedia_state');
         if (stored) {
@@ -540,6 +587,7 @@
         adsContainer.innerHTML = state.pricing.ads.map((pkg, i) => createPricingCard(pkg, 'ads', i)).join('');
         recoveryContainer.innerHTML = state.pricing.recovery.map((pkg, i) => createPricingCard(pkg, 'recovery', i)).join('');
     }
+
 
 
     function createPricingCard(pkg, type, index) {
@@ -590,6 +638,7 @@
             tabAds.className = 'px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 text-gray-600 dark:text-gray-400';
         }
     }
+
 
 
     // ============================================
@@ -652,6 +701,7 @@
     }
 
 
+
     // ============================================
     // MOBILE MENU
     // ============================================
@@ -705,12 +755,116 @@
     }
     setTimeout(() => { showTestiPopup(); setInterval(showTestiPopup, 5000); }, 3000);
 
+
+    // ============================================
+    // PRELOADER
+    // ============================================
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            document.getElementById('preloader').classList.add('hidden');
+        }, 1500);
+    });
+
+    // ============================================
+    // SCROLL REVEAL ANIMATION
+    // ============================================
+    function initScrollReveal() {
+        const reveals = document.querySelectorAll('[data-reveal]');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, i) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => { entry.target.classList.add('revealed'); }, i * 100);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+        reveals.forEach(el => observer.observe(el));
+    }
+
+    // ============================================
+    // ANIMATED NUMBER COUNTER
+    // ============================================
+    function animateCounters() {
+        const counters = document.querySelectorAll('[data-count]');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const el = entry.target;
+                    const target = el.getAttribute('data-count');
+                    const prefix = el.getAttribute('data-prefix') || '';
+                    const suffix = el.getAttribute('data-suffix') || '';
+                    const duration = 2000;
+                    const isFloat = target.includes('.');
+                    const numTarget = parseFloat(target);
+                    let start = 0;
+                    const startTime = performance.now();
+                    function update(currentTime) {
+                        const elapsed = currentTime - startTime;
+                        const progress = Math.min(elapsed / duration, 1);
+                        const eased = 1 - Math.pow(1 - progress, 3);
+                        const current = isFloat ? (eased * numTarget).toFixed(1) : Math.floor(eased * numTarget);
+                        el.textContent = prefix + current + suffix;
+                        if (progress < 1) requestAnimationFrame(update);
+                    }
+                    requestAnimationFrame(update);
+                    observer.unobserve(el);
+                }
+            });
+        }, { threshold: 0.5 });
+        counters.forEach(el => observer.observe(el));
+    }
+
+
+    // ============================================
+    // NAVBAR SCROLL EFFECTS
+    // ============================================
+    function initNavbarScroll() {
+        const navbar = document.getElementById('navbar');
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('nav a[href^="#"]');
+        
+        window.addEventListener('scroll', () => {
+            // Shadow on scroll
+            if (window.scrollY > 50) {
+                navbar.classList.add('shadow-lg', 'shadow-black/5');
+            } else {
+                navbar.classList.remove('shadow-lg', 'shadow-black/5');
+            }
+            
+            // Active link highlight
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                if (window.scrollY >= sectionTop) {
+                    current = section.getAttribute('id');
+                }
+            });
+            navLinks.forEach(link => {
+                link.classList.remove('text-emerald-500');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('text-emerald-500');
+                }
+            });
+
+            // Back to top button
+            const btn = document.getElementById('backToTop');
+            if (window.scrollY > 500) {
+                btn.classList.remove('hidden');
+            } else {
+                btn.classList.add('hidden');
+            }
+        });
+    }
+
     // ============================================
     // INITIALIZE
     // ============================================
     initTheme();
     renderPricing();
     renderServiceBadges();
+    initScrollReveal();
+    animateCounters();
+    initNavbarScroll();
     </script>
 </body>
 </html>
